@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'widgetView.dart';
 import 'userRegistration.dart';
 import 'Betterflye/common.dart';
+import 'screens/initScreen/components/init.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,7 +31,11 @@ class _MyHomePageController extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) => _MyHomePageView(this);
 
-  Future<void> handleLogin() async {
+  void handleLogin() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Initiative()),
+    );
     _logger.d("Directing user to login page");
   }
 
@@ -42,8 +47,23 @@ class _MyHomePageController extends State<MyHomePage> {
     _logger.d("Directing user to sign up page");
   }
 
-  void handleForgotPassword() {
-    _logger.d("User forgot password");
+  Future<void> handleForgotPassword() async {
+    const String url =
+        "http://sandbox.betterflye.me/php/APIV1/init/getInits.php";
+    const String API_KEY = "MTIzNDU2Nzg5MTIzNDU2Nzg5MTIzNDU2";
+    var response = await http.post(
+      url,
+      body: {
+        'API_KEY': API_KEY,
+        'searchParam': 'volunteering',
+        'searchTerm': 'somethingRandom',
+        'pageNo': '1'
+      },
+    );
+
+    String json = response.body;
+    _logger.d("$json");
+    print(json);
   }
 }
 
